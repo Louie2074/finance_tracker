@@ -1,17 +1,17 @@
 import type { PropsWithChildren, ReactElement } from 'react';
 import { StyleSheet } from 'react-native';
 import Animated, {
-  interpolate,
-  useAnimatedRef,
-  useAnimatedStyle,
-  useScrollViewOffset,
+    interpolate,
+    useAnimatedRef,
+    useAnimatedStyle,
+    useScrollViewOffset,
 } from 'react-native-reanimated';
 
 import { ThemedView } from '../components/ThemedView';
 import { useBottomTabOverflow } from '../components/ui/TabBarBackground';
 import { useColorScheme } from '../hooks/useColorScheme';
 
-const HEADER_HEIGHT = 250;
+const HEADER_HEIGHT = 120; // Increased header height to give more space
 
 type Props = PropsWithChildren<{
   headerImage: ReactElement;
@@ -45,12 +45,13 @@ export default function ParallaxScrollView({
   });
 
   return (
-    <ThemedView style={styles.container}>
+    <ThemedView style={[styles.container, { backgroundColor: headerBackgroundColor[colorScheme] }]}>
       <Animated.ScrollView
         ref={scrollRef}
         scrollEventThrottle={16}
         scrollIndicatorInsets={{ bottom }}
-        contentContainerStyle={{ paddingBottom: bottom }}>
+        style={{ backgroundColor: headerBackgroundColor[colorScheme] }}
+        contentContainerStyle={{ paddingBottom: bottom, backgroundColor: headerBackgroundColor[colorScheme] }}>
         <Animated.View
           style={[
             styles.header,
@@ -59,7 +60,7 @@ export default function ParallaxScrollView({
           ]}>
           {headerImage}
         </Animated.View>
-        <ThemedView style={styles.content}>{children}</ThemedView>
+        <ThemedView style={[styles.content, { backgroundColor: headerBackgroundColor[colorScheme] }]}>{children}</ThemedView>
       </Animated.ScrollView>
     </ThemedView>
   );
@@ -72,11 +73,12 @@ const styles = StyleSheet.create({
   header: {
     height: HEADER_HEIGHT,
     overflow: 'hidden',
+    
   },
   content: {
     flex: 1,
-    padding: 32,
-    gap: 16,
-    overflow: 'hidden',
+    paddingLeft: 16,
+    paddingRight: 16,
+    paddingBottom: 32,
   },
 });
